@@ -2,25 +2,25 @@
   {
     "name": "Oxentt",
     "description": "A gathering of entrepreneurs, business leaders and executives from around the world sharing a common vision.",
-    "urlImg": "/projects/oxentt.png",
+    "urlImg": "/projects/oxentt.webp",
     "link": "https://oxentt-business.com"
   },
   {
     "name": "Kerawen",
     "description": "A cash management software.",
-    "urlImg": "/projects/kerawen.png",
+    "urlImg": "/projects/kerawen.webp",
     "link": "https://kerawen.com"
   },
   {
     "name": "Talenteum",
     "description": "Talenteum is a job search platform that combines networking and career opportunities, allowing users to connect, build profiles, and explore job listings in a social environment.",
-    "urlImg": "/projects/talenteum.png",
+    "urlImg": "/projects/talenteum.webp",
     "link": "https://www.hire.talenteum.com"
   },
   {
     "name": "Noah Voyages",
     "description": "Noah Voyages is an innovative digital tourism platform that offers tailor-made tours.",
-    "urlImg": "/projects/noah.png",
+    "urlImg": "/projects/noah.webp",
     "link": "https://noah-voyages.com/"
   }
 ]
