@@ -1,3 +1,14 @@
+---
+import { getMessages, type Locale } from "../i18n/ui";
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = getMessages(lang);
+---
+
 <button id="openSuccessModalBtn" class="hidden"></button>
 <div id="successModal" class="hidden">
   <div
@@ -21,14 +32,14 @@
     <p
       class="mb-4 text-lg font-semibold text-gray-900 dark:text-white text-center"
     >
-      I've received your message, I'll get in contact with you soon.
+      {t.contactForm.successMessage}
     </p>
     <button
       type="button"
       id="closeSuccessModal"
-      class="w-full p-2 text-white font-semibold bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:ring-4 focus:outline-hidden focus:ring-blue-300 rounded-md dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-950 transition-all duration-300"
+      class="w-full p-2 text-white font-semibold bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:ring-4 focus:outline-hidden focus:ring-blue-300 rounded-md dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-950 transition-all duration-300"
     >
-      Continue
+      {t.contactForm.continue}
     </button>
   </div>
 </div>

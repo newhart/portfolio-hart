@@ -1,22 +1,39 @@
 ---
 import { Image } from "astro:assets";
+import { getMessages, type Locale } from "../i18n/ui";
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = getMessages(lang);
 
 const { pathname } = Astro.url;
 
 let links: string[];
-const linkNames = ["Home", "About", "Projects", "Contact"];
+const basePath = lang === "en" ? "/en" : "";
+const linkNames = [t.nav.home, t.nav.about, t.nav.projects, t.nav.contact];
 
-if (pathname == "/") {
+if (pathname === "/" || pathname === "/en" || pathname === "/en/") {
   links = ["#home", "#about", "#projects", "#contact"];
 } else {
-  links = ["/", "/#about", "/projects", "/#contact"];
+  links = [
+    `${basePath}/`,
+    `${basePath}/#about`,
+    `${basePath}/projects`,
+    `${basePath}/#contact`,
+  ];
 }
+
+const switchLangHref =
+  lang === "en" ? pathname.replace(/^\/en(?=\/|$)/, "") || "/" : `/en${pathname}`;
 ---
 
 <header
   class="max-w-screen-lg mx-auto flex flex-wrap justify-between py-1 px-4 sm:px-6 items-center sticky top-0 z-50 lg:rounded-b-md border border-gray-300 dark:border-neutral-800 backdrop-blur-xs"
 >
-  <a href="/">
+  <a href={basePath || "/"} aria-label="Accueil">
     <Image
       src="/logo.png"
       class="size-16 object-contain object-center bg-transparent"
@@ -29,6 +46,14 @@ if (pathname == "/") {
     />
   </a>
   <div class="sm:order-2 flex items-center gap-3 text-gray-900">
+    <a
+      href={switchLangHref}
+      title={lang === "en" ? "Passer en français" : "Switch to English"}
+      aria-label={lang === "en" ? "Passer en français" : "Switch to English"}
+      class="px-2 py-1 rounded-md border border-gray-300 dark:border-neutral-700 text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-neutral-800"
+    >
+      {lang === "en" ? "FR" : "EN"}
+    </a>
     <button
       title="Theme Toggle"
       aria-label="Theme Toggle"

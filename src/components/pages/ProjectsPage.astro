@@ -1,0 +1,33 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import PROJECTS from "../../assets/collections/projects.json";
+import Project from "../Project.astro";
+import { getMessages, type Locale } from "../../i18n/ui";
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = getMessages(lang);
+---
+
+<Layout lang={lang}>
+  <section class="flex flex-col gap-2">
+    <h1
+      class="font-bold text-2xl sm:text-3xl lg:text-4xl text-gray-950 dark:text-white"
+    >
+      {t.projects.title}
+    </h1>
+    <p
+      class="text-base md:text-lg sm:w-3/4 text-gray-600 dark:text-gray-400 text-pretty"
+    >
+      {t.projects.description}
+    </p>
+  </section>
+  <section
+    class="grid grid-cols-1 sm:grid-cols-2 gap-6 mx-auto max-w-screen-md"
+  >
+    {PROJECTS.map((project) => <Project project={project} />)}
+  </section>
+</Layout>

@@ -3,21 +3,34 @@ import background from "../assets/background.svg";
 import Footer from "../components/Footer.astro";
 import Navbar from "../components/Navbar.astro";
 import "../styles/global.css";
+import {
+  defaultLocale,
+  getMessages,
+  resolveLocaleFromPath,
+  type Locale,
+} from "../i18n/ui";
+
+interface Props {
+  lang?: Locale;
+}
+
+const lang = Astro.props.lang ?? resolveLocaleFromPath(Astro.url.pathname);
+const t = getMessages(lang ?? defaultLocale);
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/webp" href="/logo.png" />
     <meta name="generator" content={Astro.generator} />
-    <title>Haritiana's Web Development Portfolio</title>
+    <title>{t.metaTitle}</title>
 
     <!-- Metas -->
     <meta
       name="description"
-      content="Portfolio of Haritiana, a fullstack web developer specializing in Laravel, Vue.js, React.js, Symfony, WordPress, and more. Explore my projects and skills."
+      content={t.metaDescription}
     />
   </head>
   <body class="dark:bg-gray-950">
@@ -27,11 +40,11 @@ import "../styles/global.css";
       alt=""
       fetchpriority="high"
     />
-    <Navbar />
+    <Navbar lang={lang} />
     <main class="max-w-screen-lg mx-auto p-6 flex flex-col gap-12">
       <slot />
     </main>
-    <Footer />
+    <Footer lang={lang} />
   </body>
   <style is:global>
     * {
