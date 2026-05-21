@@ -109,8 +109,8 @@ const t = getMessages(lang);
             EXPERIENCES.map((experience) => (
               <TimelineItem
                 title={experience.company}
-                description={experience.description}
-                date={experience.dates}
+                description={(experience.description as Record<string, string>)[lang]}
+                date={(experience.dates as Record<string, string>)[lang]}
               >
                 <div
                   slot="icon"

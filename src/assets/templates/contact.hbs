@@ -1,0 +1,85 @@
+<html>
+  <head>
+    <style>
+      body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 0;
+        color: #333;
+      }
+      .container {
+        width: 80%;
+        margin: 20px auto;
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        font-size: 22px;
+        color: #79396b;
+        margin-bottom: 16px;
+        border-bottom: 2px solid #79396b;
+        padding-bottom: 10px;
+      }
+      .field {
+        margin: 16px 0;
+      }
+      .field strong {
+        display: block;
+        font-size: 13px;
+        text-transform: uppercase;
+        color: #888;
+        margin-bottom: 4px;
+      }
+      .field p {
+        font-size: 15px;
+        background-color: #f5f5f5;
+        padding: 10px 14px;
+        border-radius: 6px;
+        margin: 0;
+      }
+      .message-box {
+        background-color: #fdf4fb;
+        border-left: 4px solid #79396b;
+        padding: 14px;
+        border-radius: 6px;
+        font-size: 15px;
+        white-space: pre-line;
+      }
+      .footer {
+        margin-top: 30px;
+        font-size: 12px;
+        color: #aaa;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>📩 Nouveau message depuis votre portfolio</h1>
+
+      <div class="field">
+        <strong>Email de l'expéditeur</strong>
+        <p>{{email}}</p>
+      </div>
+
+      {{#if message}}
+      <div class="field">
+        <strong>Message</strong>
+        <div class="message-box">{{message}}</div>
+      </div>
+      {{else}}
+      <div class="field">
+        <strong>Message</strong>
+        <p style="color: #aaa; font-style: italic;">Aucun message fourni.</p>
+      </div>
+      {{/if}}
+
+      <div class="footer">
+        <p>Ce message a été envoyé depuis le formulaire de contact de votre portfolio.</p>
+      </div>
+    </div>
+  </body>
+</html>

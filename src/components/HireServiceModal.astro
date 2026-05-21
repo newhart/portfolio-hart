@@ -14,94 +14,97 @@ const t = getMessages(lang);
 <div
   class="bg-white rounded-md dark:bg-gray-950 w-full flex flex-col p-6 h-fit"
 >
-  <div class="flex justify-between items-center">
-    <h2
-      class="font-semibold text-xl sm:text-2xl text-gray-950 dark:text-white"
-    >
-      {t.contactForm.scheduleMeeting}
-    </h2>
-  </div>
-  <form id="scheduleMeetingForm" class="mt-4 flex flex-col gap-4">
+  <h2 class="font-semibold text-xl sm:text-2xl text-gray-950 dark:text-white mb-4">
+    {t.contactForm.scheduleMeeting}
+  </h2>
+  <form id="contactForm" class="flex flex-col gap-4">
     <div class="flex flex-col gap-2">
-      <label for="email" class="text-gray-700 dark:text-gray-300"
-        >{t.contactForm.yourEmail}</label
-      >
+      <label for="contact-email" class="text-gray-700 dark:text-gray-300">
+        {t.contactForm.yourEmail}
+      </label>
       <input
-        class="text-gray-700 dark:text-gray-300 border border-gray-400 rounded-md focus:outline-hidden focus:ring-1 focus:ring-blue-500 p-2 bg-gray-50 dark:bg-gray-950/20 dark:border-neutral-800"
-        id="email"
+        class="text-gray-700 dark:text-gray-300 border border-gray-400 rounded-md focus:outline-hidden focus:ring-1 focus:ring-[#79396b] p-2 bg-gray-50 dark:bg-gray-950/20 dark:border-neutral-800"
+        id="contact-email"
         name="email"
         type="email"
         required
       />
     </div>
     <div class="flex flex-col gap-2">
-      <label for="message" class="text-gray-700 dark:text-gray-300"
-        >{t.contactForm.optionalMessage}</label
-      >
+      <label for="contact-message" class="text-gray-700 dark:text-gray-300">
+        {t.contactForm.optionalMessage}
+      </label>
       <textarea
-        class="text-gray-700 dark:text-gray-300 border border-gray-400 rounded-md focus:outline-hidden focus:ring-1 focus:ring-blue-500 p-2 bg-gray-50 dark:bg-gray-950/20 dark:border-neutral-800"
+        class="text-gray-700 dark:text-gray-300 border border-gray-400 rounded-md focus:outline-hidden focus:ring-1 focus:ring-[#79396b] p-2 bg-gray-50 dark:bg-gray-950/20 dark:border-neutral-800"
         rows="6"
         name="message"
-        id="message"></textarea>
+        id="contact-message"
+      ></textarea>
     </div>
     <button
       type="submit"
-      class="w-full p-2 text-white font-semibold bg-linear-to-r from-[#79396b] to-[#8d367a] hover:from-[#79396b] hover:to-[#8d367a] focus:ring-4 focus:outline-hidden focus:ring-blue-300 rounded-md dark:bg-[#79396b] dark:hover:bg-[#8d367a] dark:focus:ring-blue-950 transition-all duration-300"
+      id="contactSubmitBtn"
+      class="w-full p-2 text-white font-semibold bg-linear-to-r from-[#79396b] to-[#8d367a] focus:ring-4 focus:outline-hidden focus:ring-[#79396b]/30 rounded-md transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
     >
-      {t.contactForm.schedule}
+      <svg
+        id="submit-spinner"
+        class="hidden size-4 animate-spin"
+        fill="none"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"
+        ></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8v8z"
+        ></path>
+      </svg>
+      <span id="submit-label">{t.contactForm.schedule}</span>
     </button>
   </form>
 </div>
+
 <SuccessModal lang={lang} />
 <ErrorModal lang={lang} />
 
 <script>
   import { actions } from "astro:actions";
-  import { Modal } from "../utils/modal";
+  import { showToast } from "../utils/toast";
 
   window.addEventListener("DOMContentLoaded", () => {
-    const hireServiceButtons = document.getElementsByClassName(
-      "hireServiceButton"
-    ) as HTMLCollectionOf<HTMLElement>;
-    const hireServiceModal = new Modal("hireServiceModal");
+    const form = document.getElementById("contactForm") as HTMLFormElement | null;
+    const submitBtn = document.getElementById("contactSubmitBtn") as HTMLButtonElement | null;
+    const spinner = document.getElementById("submit-spinner");
+    const label = document.getElementById("submit-label");
 
-    for (const button of hireServiceButtons) {
-      button.addEventListener("click", () => {
-        localStorage.setItem("currentServiceId", button.dataset.serviceId!);
-        hireServiceModal.show();
-      });
-    }
+    if (!form || !submitBtn) return;
 
-    const closeModalBtn = document.getElementById("closeScheduleMeetingModal");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-    if (closeModalBtn instanceof HTMLButtonElement) {
-      closeModalBtn.addEventListener("click", () => {
-        hireServiceModal.hide();
-      });
-    }
+      submitBtn.disabled = true;
+      spinner?.classList.remove("hidden");
 
-    const scheduleMeetingForm = document.getElementById("scheduleMeetingForm");
+      const formData = new FormData(form);
+      const { error } = await actions.contactMe(formData);
 
-    if (scheduleMeetingForm instanceof HTMLFormElement) {
-      scheduleMeetingForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
+      submitBtn.disabled = false;
+      spinner?.classList.add("hidden");
 
-        const serviceId = localStorage.getItem("currentServiceId")!;
-        const formData = new FormData(scheduleMeetingForm);
-        formData.append("serviceId", serviceId);
-
-        const { error } = await actions.hireService(formData);
-
-        hireServiceModal.hide();
-
-        if (!error) {
-          document.getElementById("openSuccessModalBtn")?.click();
-        } else {
-          document.getElementById("openErrorModalBtn")?.click();
-        }
-
-        scheduleMeetingForm.reset();
-      });
-    }
+      if (!error) {
+        form.reset();
+        showToast("toast-success");
+      } else {
+        showToast("toast-error");
+      }
+    });
   });
 </script>
