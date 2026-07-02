@@ -14,4 +14,9 @@ export default defineConfig({
   },
   output: "server",
   adapter: vercel(),
+  security: {
+    // Vercel's proxy rewrites Host/Origin headers, which makes Astro's default
+    // CSRF origin check reject action POSTs with a 403 in production.
+    checkOrigin: false,
+  },
 });

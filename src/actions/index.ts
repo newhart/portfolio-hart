@@ -4,8 +4,8 @@ import { z } from "astro:schema";
 import { Resend } from "resend";
 import SERVICES from "../assets/collections/services.json";
 import Handlebars from "handlebars";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import contactTemplateSource from "../assets/templates/contact.hbs?raw";
+import hireServiceTemplateSource from "../assets/templates/hire-service.hbs?raw";
 
 const resend = new Resend(RESEND_API_KEY);
 
@@ -19,11 +19,7 @@ export const server = {
     handler: async (input) => {
       const { email, message } = input;
 
-      const templateSource = readFileSync(
-        join(process.cwd(), "src/assets/templates/contact.hbs"),
-        "utf-8"
-      );
-      const template = Handlebars.compile(templateSource);
+      const template = Handlebars.compile(contactTemplateSource);
       const html = template({ email, message });
 
       const { error } = await resend.emails.send({
@@ -69,11 +65,7 @@ export const server = {
         });
       }
 
-      const templateSource = readFileSync(
-        join(process.cwd(), "src/assets/templates/hire-service.hbs"),
-        "utf-8"
-      );
-      const template = Handlebars.compile(templateSource);
+      const template = Handlebars.compile(hireServiceTemplateSource);
       const html = template({
         service,
         email,
